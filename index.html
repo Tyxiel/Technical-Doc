@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Technical Document</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const sections = document.querySelectorAll(".main-section");
+        const navLinks = document.querySelectorAll("#navbar a");
+
+        function setActiveLink() {
+          let fromTop = window.scrollY + 50;
+
+          sections.forEach((section) => {
+            if (
+              section.offsetTop <= fromTop &&
+              section.offsetTop + section.offsetHeight > fromTop
+            ) {
+              navLinks.forEach((link) => {
+                if (link.href.includes(`#${section.id}`)) {
+                  link.classList.add("active");
+                } else {
+                  link.classList.remove("active");
+                }
+              });
+            }
+          });
+        }
+
+        setActiveLink();
+
+        document.addEventListener("scroll", setActiveLink);
+      });
+    </script>
+  </head>
+  <body>
+    <header>
+      <nav id="navbar">
+        <ul>
+          <li><header id="nav-title">Golang</header></li>
+          <li>
+            <a class="nav-link active" href="#Introduction">Introduction</a>
+          </li>
+          <li><a class="nav-link" href="#Formatting">Formatting</a></li>
+          <li><a class="nav-link" href="#Commentary">Commentary</a></li>
+          <li><a class="nav-link" href="#Names">Names</a></li>
+          <li><a class="nav-link" href="#Semicolons">Semicolons</a></li>
+          <li>
+            <a class="nav-link" href="#Control_structures"
+              >Control structures</a
+            >
+          </li>
+          <li><a class="nav-link" href="#Functions">Functions</a></li>
+          <li><a class="nav-link" href="#Reference">Reference</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main id="main-doc">
+      <article>
+        <section
+          role=""
+          id="Introduction"
+          class="main-section"
+          role="region"
+          aria-labelledby="introduction-header"
+        >
+          <header id="introduction-header">Introduction</header>
+          <p>
+            Go, a new language, differs from its predecessors despite shared
+            ideas. Translating C++ or Java code directly to Go often fails, as
+            Java is not Go. However, approaching problems from a Go perspective
+            can lead to successful, albeit different, programs. To excel in Go,
+            grasp its unique properties and idioms. Familiarize yourself with
+            Go's naming, formatting, and construction conventions, ensuring your
+            code is understandable to other Go programmers.
+          </p>
+        </section>
+        <section
+          id="Formatting"
+          class="main-section"
+          role="region"
+          aria-labelledby="formatting-header"
+        >
+          <header id="formatting-header">Formatting</header>
+          <p>
+            Go uses the <span class="monospace">gofmt</span> tool to standardize
+            formatting, automatically adjusting code to a consistent style. This
+            approach eliminates the need for a prescriptive style guide and
+            reduces time spent on formatting debates. By using
+            <span class="monospace">gofmt</span>, developers can focus on
+            functionality, adjusting their code when necessary to align with the
+            tool's output. This streamlined process enhances efficiency and
+            promotes consistency across Go projects.
+          </p>
+          <p>
+            Consider a situation where you're writing a Go program and you're
+            unsure about how to format a function with multiple return values.
+          </p>
+          <p>
+            Instead of manually adjusting the spacing or alignment of your
+            return values, you can use <span class="monospace">gofmt</span>, the
+            Go formatter. It's designed to handle such situations and will
+            automatically format your code according to the standard Go format.
+          </p>
+          <p>For instance, given the function: "</p>
+          <pre><code>func calculate(x, y int) (result int, errorMessage string) {
+if y == 0 {
+  errorMessage = "Error: Division by zero"
+  return
+ }
+result = x / y
+return
+      }</code></pre>
+          <p>
+            Running <span class="monospace">gofmt</span> will adjust the spacing
+            around the return statement to ensure consistent formatting. This
+            way, you can focus on the logic of your program without worrying
+            about the minor details of formatting.
+          </p>
+        </section>
+        <section
+          id="Commentary"
+          class="main-section"
+          role="region"
+          aria-labelledby="commentary-header"
+        >
+          <header id="commentary-header">Commentary</header>
+          <p>
+            Go supports both C-style /* */ block comments and C++-style // line
+            comments, with the latter being more common. Block comments are
+            useful within expressions or to comment out large sections of code,
+            and are often used as package comments. Comments before top-level
+            declarations are considered doc comments, which are the primary
+            source of documentation for a Go package or command. To learn more
+            about doc comments, refer to "Go Doc Comments".
+          </p>
+        </section>
+        <section
+          id="Names"
+          class="main-section"
+          role="region"
+          aria-labelledby="names-header"
+        >
+          <header id="names-header">Names</header>
+          <p>
+            In Go, a name's first character determines its visibility: uppercase
+            for external use, lowercase for internal. This is about syntax, not
+            style. For exported methods, use camel-case starting with a capital,
+            like WriteToDB. For non-English identifiers, you can prefix with 'X'
+            to indicate exportedness, such as 'X日本語'. Abbreviations should
+            maintain the same case..
+          </p>
+          <h3>Package names</h3>
+          <p>
+            When a package is imported, the package name becomes an accessor for
+            the contents.
+          </p>
+          <pre><code>import "bytes"</code></pre>
+          <p>
+            When naming a package that deals with
+            <span class="monospace">bytes.Buffer</span>, it's important to
+            choose a short, concise, and evocative name, following the
+            convention of lowercase, single-word names. This is because anyone
+            using your package will be typing this name. However, you don't need
+            to worry about collisions initially, as package names are only the
+            default for imports and can be changed locally in the importing
+            package if a conflict arises. The specific file name in the import
+            statement will clarify which package is being used, making confusion
+            rare.
+          </p>
+          <p>
+            Another convention is that the package name is the base name of its
+            source directory; the package in
+            <span class="monospace">src/encoding/base64</span> is imported as
+            "<span class="monospace">encoding/base64</span>" but has name
+            <span class="monospace">base64</span>, not
+            <span class="monospace">encoding_base64</span> and not
+            <span class="monospace">encodingBase64.</span>
+          </p>
+          <p>
+            The importer of a package will use the name to refer to its
+            contents, so exported names in the package can use that fact to
+            avoid repetition. (Don't use the import . notation, which can
+            simplify tests that must run outside the package they are testing,
+            but should otherwise be avoided.) For instance, the buffered reader
+            type in the <span class="monospace">bufio</span> package is called
+            <span class="monospace">Reader</span>, not
+            <span class="monospace">BufReader</span>, because users see it as
+            <span class="monospace">bufio.Reader</span>, which is a clear,
+            concise name. Moreover, because imported entities are always
+            addressed with their package name,
+            <span class="monospace">bufio.Reader</span> does not conflict with
+            <span class="monospace">io.Reader. Similarly</span>, the function to
+            make new instances of ring.Ring—which is the definition of a
+            constructor in Go—would normally be called
+            <span class="monospace">NewRing</span>, but since Ring is the only
+            type exported by the package, and since the package is called ring,
+            it's called just <span class="monospace">New</span>, which clients
+            of the package see as <span class="monospace">ring.New</span>. Use
+            the package structure to help you choose good names.
+          </p>
+          <p>
+            Another short example is <span class="monospace">once.Do</span>;
+            <span class="monospace">once.Do(setup)</span> reads well and would
+            not be improved by writing once.<span class="monospace"
+              >DoOrWaitUntilDone(setup)</span
+            >. Long names don't automatically make things more readable. A
+            helpful doc comment can often be more valuable than an extra long
+            name.
+          </p>
+          <h3>Getters</h3>
+          <p>
+            Go does not automatically generate getters and setters. While it's
+            acceptable to create them manually, it's not idiomatic to prefix
+            "<span class="monospace">Get</span>" to getter names. For instance,
+            a field named "owner" should have a getter named "<span
+              class="monospace"
+              >Owner</span
+            >" (exported in uppercase), not "<span class="monospace"
+              >GetOwner</span
+            >". Using uppercase for exported names distinguishes fields from
+            methods. Similarly, a setter function would typically be named
+            "<span class="monospace">SetOwner</span>". These naming conventions
+            enhance code readability and clarity in Go.
+          </p>
+          <pre><code>owner := obj.Owner()
+if owner != user {
+  obj.SetOwner(user)
+}</code></pre>
+          <h3>Interface names</h3>
+          <p>
+            By convention, one-method interfaces are named by the method name
+            plus an -er suffix or similar modification to construct an agent
+            noun: <span class="monospace">Reader</span>,
+            <span class="monospace">Writer</span>,
+            <span class="monospace">Formatter</span>,
+            <span class="monospace">CloseNotifier</span> etc.
+          </p>
+          <p>
+            Respect established function names like
+            <span class="monospace">Read</span>,
+            <span class="monospace">Write</span>,
+            <span class="monospace">Close</span>,
+            <span class="monospace">Flush</span>, and
+            <span class="monospace">String</span>, which have specific
+            signatures and meanings. Avoid using these names for your methods
+            unless they match the exact functionality. Conversely, if your
+            type's method mirrors a well-known type's method, use the same name
+            and signature; for example, name your string-converter method
+            <span class="monospace">String</span>, not
+            <span class="monospace">ToString</span>, to maintain clarity and
+            consistency.
+          </p>
+          <h3>MixedCaps</h3>
+          <p>
+            Finally, the convention in Go is to use
+            <span class="monospace">MixedCaps</span> or
+            <span class="monospace">mixedCaps</span>
+            rather than underscores to write multiword names.
+          </p>
+        </section>
+        <section
+          id="Semicolons"
+          class="main-section"
+          role="region"
+          aria-labelledby="semicolons-header"
+        >
+          <header id="semicolons-header">Semicolons</header>
+          <p>
+            Like C, Go's formal grammar terminates statements with semicolons,
+            but unlike C, these semicolons are not explicitly typed in the
+            source code. Instead, Go's lexer inserts semicolons automatically
+            based on a straightforward rule to keep the input text mostly free
+            of them.
+          </p>
+          <p>
+            The rule is: if the last token before a newline is an identifier
+            (which includes words like `<span class="monospace">int</span>` and
+            `<span class="monospace">float64</span>`), a basic literal (like a
+            number or string constant), or one of certain tokens
+          </p>
+          <pre><code>break continue fallthrough return ++ -- ) }</code></pre>
+          <p>
+            the lexer always inserts a semicolon after the token. This could be
+            summarized as, “if the newline comes after a token that could end a
+            statement, insert a semicolon”.
+          </p>
+          <p>
+            A semicolon can also be omitted immediately before a closing brace,
+            so a statement such as
+          </p>
+          <pre><code>go func() { for { dst <- <-src } }()
+</code></pre>
+          <p>
+            needs no semicolons. Idiomatic Go programs have semicolons only in
+            places such as for loop clauses, to separate the initializer,
+            condition, and continuation elements.
+          </p>
+          <p>
+            One consequence of the semicolon insertion rules is that you cannot
+            put the opening brace of a control structure (<span
+              class="monospace"
+              >if</span
+            >, <span class="monospace">for</span>,
+            <span class="monospace">switch</span>, or
+            <span class="monospace">select</span>) on the next line. If you do,
+            a semicolon will be inserted before the brace, which could cause
+            unwanted effects. Write them like this
+          </p>
+          <pre><code>if i < f() {
+  g()
+}</code></pre>
+          <p>not like this</p>
+          <pre><code>if i < f()  // wrong!
+{           // wrong!
+    g()
+}</code></pre>
+        </section>
+        <section
+          id="Control_structures"
+          class="main-section"
+          role="region"
+          aria-labelledby="control_structures-header"
+        >
+          <header id="control_structures-header">Control structures</header>
+          <p>
+            Go's control structures resemble C's but with notable differences:
+            no <span class="monospace">do</span> or
+            <span class="monospace">while</span> loops; a generalized for loop;
+            a more flexible <span class="monospace">switch</span> statement;
+            optional initialization in <span class="monospace">if</span> and
+            <span class="monospace">switch</span> statements; labeled break and
+            continue; and new structures like type switches and select for
+            multiway communications. Syntax differs in requiring brace-delimited
+            bodies and omitting parentheses around conditions.
+          </p>
+          <h3>If</h3>
+          <p>In Go a simple if looks like this:</p>
+          <pre><code>if x > 0 {
+    return y
+  }</code></pre>
+          <p>
+            Mandatory braces encourage writing simple if statements on multiple
+            lines. It's good style to do so anyway, especially when the body
+            contains a control statement such as a
+            <span class="monospace">return</span> or
+            <span class="monospace">break</span>.
+          </p>
+          <p>
+            Since <span class="monospace">if</span> and
+            <span class="monospace">switch</span> accept an initialization
+            statement, it's common to see one used to set up a local variable.
+          </p>
+          <pre><code>if err := file.Chmod(0664); err != nil {
+    log.Print(err)
+    return err
+}</code></pre>
+          <p>
+            In the Go libraries, you'll find that when an if statement doesn't
+            flow into the next statement—that is, the body ends in
+            <span class="monospace">break</span>,
+            <span class="monospace">continue</span>,
+            <span class="monospace">goto</span>, or
+            <span class="monospace">return</span>—the unnecessary
+            <span class="monospace">else</span> is omitted.
+          </p>
+          <pre><code>f, err := os.Open(name)
+if err != nil {
+      return err
+}
+codeUsing(f)</code></pre>
+          <h3>Redeclaration and reassignment</h3>
+          <p>
+            In a := declaration a variable <span class="monospace">v</span> may
+            appear even if it has already been declared, provided:
+          </p>
+          <ul>
+            <li>
+              this declaration is in the same scope as the existing declaration
+              of <span class="monospace">v</span> (if
+              <span class="monospace">v</span> is already declared in an outer
+              scope, the declaration will create a new variable §),
+            </li>
+            <li>
+              the corresponding value in the initialization is assignable to
+              <span class="monospace">v</span>, and
+            </li>
+            <li>
+              there is at least one other variable that is created by the
+              declaration.
+            </li>
+            <li>
+              The type of <span class="monospace">v</span> is inferred from the
+              initialization expression, if present.
+            </li>
+            <li>
+              The scope of <span class="monospace">v</span> is limited to the
+              block in which it is declared.
+            </li>
+          </ul>
+          <p>
+            This unusual property is pure pragmatism, making it easy to use a
+            single <span class="monospace">err</span> value, for example, in a
+            long <span class="monospace">if</span>-<span class="monospace"
+              >else</span
+            >
+            chain. You'll see it used often.
+          </p>
+          <h3>For</h3>
+          <p>
+            The Go for loop combines aspects of both
+            <span class="monospace">for</span> and
+            <span class="monospace">while</span> loops from C, though it lacks a
+            <span class="monospace">do-while</span> variant. It offers three
+            forms, with only one requiring semicolons.
+          </p>
+          <pre><code>// Like a C for
+for init; condition; post { }
+            
+// Like a C while
+for condition { }
+            
+// Like a C for(;;)
+for { }</code></pre>
+          <p>
+            Short declarations simplify index variable declaration directly
+            within the loop.
+          </p>
+          <pre><code>sum := 0
+for i := 0; i < 10; i++ {
+    sum += i
+}</code></pre>
+          <p>
+            If iterating over an array, slice, string, map, or reading from a
+            channel, a <span class="monospace">range</span> clause simplifies
+            loop management.
+          </p>
+          <pre><code>for key, value := range oldMap {
+  newMap[key] = value
+}</code></pre>
+          <p>
+            If you only require the first item in the range (the key or index),
+            omit the second item.
+          </p>
+          <pre><code>for key := range m {
+    if key.expired() {
+        delete(m, key)
+    }
+}</code></pre>
+          <p>
+            If you only require the second item in the range (the value), use
+            the underscore (_) to discard the first.
+          </p>
+          <pre><code>sum := 0
+for _, value := range array {
+    sum += value
+}</code></pre>
+          <p>
+            For strings, the range simplifies iteration by parsing UTF-8 and
+            handling erroneous encodings, substituting them with the replacement
+            <span class="monospace">rune</span> U+FFFD. The loop
+          </p>
+          <pre><code>for pos, char := range "日本\x80語" { // \x80 is an illegal UTF-8 encoding
+  fmt.Printf("character %#U starts at byte position %d\n", char, pos)
+}</code></pre>
+          <p>prints</p>
+          <pre><code>character U+65E5 '日' starts at byte position 0
+character U+672C '本' starts at byte position 3
+character U+FFFD '�' starts at byte position 6
+character U+8A9E '語' starts at byte position 7</code></pre>
+          <p>
+            In Go, there is no comma operator, and
+            <span class="monospace">++</span> and
+            <span class="monospace">--</span> are statements rather than
+            expressions. Therefore, if you need to handle multiple variables in
+            a <span class="monospace">for</span> loop, you should utilize
+            parallel assignment, which does not support
+            <span class="monospace">++</span> and
+            <span class="monospace">--</span> operations.
+          </p>
+          <pre><code>// Reverse a
+for i, j := 0, len(a)-1; i < j; i, j = i+1, j-1 {
+    a[i], a[j] = a[j], a[i]
+}</code></pre>
+          <h3>Switch</h3>
+          <p>
+            Go's <span class="monospace">switch</span> statement is more
+            versatile than C's. It accepts expressions that can be non-constants
+            and non-integers. Cases are evaluated sequentially until a match is
+            found, and if the switch lacks an expression, it defaults to
+            switching on true. This allows for writing
+            <span class="monospace">if</span>-<span class="monospace">else</span
+            >-<span class="monospace">if</span>-<span class="monospace"
+              >else</span
+            >
+            chains as <span class="monospace">switch</span> statements, which is
+            both possible and idiomatic in Go.
+          </p>
+          <pre><code>func unhex(c byte) byte {
+    switch {
+    case '0' <= c && c <= '9':
+        return c - '0'
+    case 'a' <= c && c <= 'f':
+        return c - 'a' + 10
+    case 'A' <= c && c <= 'F':
+        return c - 'A' + 10
+    }
+    return 0
+}</code></pre>
+          <p>
+            There is no automatic fall-through in Go's
+            <span class="monospace">switch</span> statements, but cases can be
+            presented in comma-separated lists.
+          </p>
+          <pre><code>func shouldEscape(c byte) bool {
+    switch c {
+    case ' ', '?', '&', '=', '#', '+', '%':
+        return true
+    }
+    return false
+}</code></pre>
+          <p>
+            While <span class="monospace">break</span> statements in Go are less
+            common than in some other C-like languages, they can terminate a
+            <span class="monospace">switch</span> statement early. However,
+            there are situations where you may need to break out of a
+            surrounding loop instead of the
+            <span class="monospace">switch</span> statement. In Go, this can be
+            achieved by labeling the loop and using "<span class="monospace"
+              >break</span
+            >" with that label. The following example demonstrates both uses.
+          </p>
+          <pre><code>Loop:
+    for n := 0; n < len(src); n += size {
+        switch {
+        case src[n] < sizeOne:
+            if validateOnly {
+                break
+            }
+            size = 1
+            update(src[n])
+
+        case src[n] < sizeTwo:
+            if n+1 >= len(src) {
+                err = errShortInput
+                break Loop
+            }
+            if validateOnly {
+                break
+            }
+            size = 2
+            update(src[n] + src[n+1]<<shift)
+        }
+    }</code></pre>
+          <h3>Type switch</h3>
+          <p>
+            A <span class="monospace">switch</span> in Go can determine the
+            dynamic type of an interface variable using a
+            <span class="monospace">type switch</span>, which resembles a type
+            assertion with the keyword type inside parentheses. When declaring a
+            variable in the <span class="monospace">switch</span> expression,
+            this variable will hold the respective type in each case. It's
+            common practice to reuse the variable name in such scenarios,
+            effectively creating a new variable with the same name but a
+            different type in each case.
+          </p>
+          <pre><code>var t interface{}
+t = functionOfSomeType()
+switch t := t.(type) {
+default:
+    fmt.Printf("unexpected type %T\n", t)     // %T prints whatever type t has
+case bool:
+    fmt.Printf("boolean %t\n", t)             // t has type bool
+case int:
+    fmt.Printf("integer %d\n", t)             // t has type int
+case *bool:
+    fmt.Printf("pointer to boolean %t\n", *t) // t has type *bool
+case *int:
+    fmt.Printf("pointer to integer %d\n", *t) // t has type *int
+}</code></pre>
+        </section>
+        <section
+          id="Functions"
+          class="main-section"
+          role="region"
+          aria-labelledby="functions-header"
+        >
+          <header id="functions-header">Functions</header>
+          <h3>Multiple return values</h3>
+          <p>
+            One distinctive feature of Go is its ability for functions and
+            methods to return multiple values. This feature improves upon
+            several cumbersome practices seen in C programming: handling in-band
+            error returns like <span class="monospace">-1</span> for
+            <span class="monospace">EOF</span> and modifying arguments passed by
+            address.
+          </p>
+          <p>
+            In C, write errors are often indicated by a negative count, with the
+            error code hidden in a mutable location. In Go, the
+            <span class="monospace">Write</span> function can return both a
+            count and an error, providing explicit feedback like: "You wrote
+            some bytes but not all, due to device capacity." The signature of
+            the Write method on files from package os is:
+          </p>
+          <pre><code>func (file *File) Write(b []byte) (n int, err error)</code></pre>
+          <p>
+            In Go, functions often return both the number of bytes written and a
+            non-nil <span class="monospace">error</span> when n does not equal
+            len(b), as documented. This approach aligns with common
+            error-handling practices outlined in the documentation. Similarly,
+            this method eliminates the necessity to pass a pointer for a return
+            value to mimic a reference parameter. For instance, consider a
+            straightforward function that retrieves a number from a specified
+            position in a byte slice and returns both the number and the
+            subsequent position.
+          </p>
+          <pre><code>func nextInt(b []byte, i int) (int, int) {
+    for ; i < len(b) && !isDigit(b[i]); i++ {
+    }
+    x := 0
+    for ; i < len(b) && isDigit(b[i]); i++ {
+        x = x*10 + int(b[i]) - '0'
+    }
+    return x, i
+}</code></pre>
+          <p>
+            You could use it to scan the numbers in an input slice b like this:
+          </p>
+          <pre><code>    for i := 0; i < len(b); {
+        x, i = nextInt(b, i)
+        fmt.Println(x)
+    }</code></pre>
+          <h3>Named result parameters</h3>
+          <p>
+            In Go, function <span class="monospace">return</span> values can be
+            named and treated like regular variables, akin to incoming
+            parameters. Named return values are initialized to their type's zero
+            values when the function starts. If a
+            <span class="monospace">return</span> statement lacks arguments, the
+            current values of these named return values are used for the
+            function's result. While naming
+            <span class="monospace">return</span> values isn't obligatory, it
+            enhances code conciseness and clarity, serving as documentation. For
+            instance, naming the results of a function like
+            <span class="monospace">nextInt</span> clarifies the purpose of each
+            returned integer.
+          </p>
+          <pre><code>func nextInt(b []byte, pos int) (value, nextPos int) {</code></pre>
+          <p>
+            Because named results are initialized and tied to an unadorned
+            return, they can simplify as well as clarify. Here's a version of
+            <span class="monospace">io.ReadFull</span> that uses them well:
+          </p>
+          <pre><code>func ReadFull(r Reader, buf []byte) (n int, err error) {
+    for len(buf) > 0 && err == nil {
+        var nr int
+        nr, err = r.Read(buf)
+        n += nr
+        buf = buf[nr:]
+    }
+    return
+}</code></pre>
+          <h3>Defer</h3>
+          <p>
+            Go's <span class="monospace">defer</span> statement schedules a
+            function call, known as a deferred function, to execute just before
+            the surrounding function returns. This feature is unconventional yet
+            powerful, particularly useful for tasks like releasing resources
+            such as unlocking a mutex or closing a file, ensuring they are
+            handled irrespective of the function's return path.
+          </p>
+          <pre><code>// Contents returns the file's contents as a string.
+func Contents(filename string) (string, error) {
+    f, err := os.Open(filename)
+    if err != nil {
+        return "", err
+    }
+    defer f.Close()  // f.Close will run when we're finished.
+
+    var result []byte
+    buf := make([]byte, 100)
+    for {
+        n, err := f.Read(buf[0:])
+        result = append(result, buf[0:n]...) // append is discussed later.
+        if err != nil {
+            if err == io.EOF {
+                break
+            }
+            return "", err  // f will be closed if we return here.
+        }
+    }
+    return string(result), nil // f will be closed if we return here.
+}</code></pre>
+          <p>
+            Deferring a call to a function like
+            <span class="monospace">Close</span> offers two key benefits.
+            Firstly, it ensures the file is always closed, preventing the common
+            mistake of forgetting to close it when adding new return paths.
+            Secondly, it improves code clarity by placing the close operation
+            near the open operation, rather than at the function's end.
+          </p>
+          <p>
+            The arguments passed to a deferred function, including the receiver
+            in case of a method, are evaluated when the defer statement is
+            executed, not when the function call actually happens. This avoids
+            concerns about variables changing during function execution and
+            allows a single defer statement to defer multiple function
+            executions. Here's a silly example.
+          </p>
+          <pre><code>for i := 0; i < 5; i++ {
+    defer fmt.Printf("%d ", i)
+}</code></pre>
+          <p>
+            Deferred functions execute in Last In, First Out (LIFO) order, which
+            means that in this code, the numbers
+            <span class="monospace">4 3 2 1 0</span> will be printed when the
+            function returns. A practical application is tracing function
+            execution within a program. For instance, we can define simple
+            tracing routines like these:
+          </p>
+          <pre><code>func trace(s string)   { fmt.Println("entering:", s) }
+func untrace(s string) { fmt.Println("leaving:", s) }
+
+// Use them like this:
+func a() {
+    trace("a")
+    defer untrace("a")
+    // do something....
+}</code></pre>
+          <p>
+            We can do better by exploiting the fact that arguments to deferred
+            functions are evaluated when the
+            <span class="monospace">defer</span> executes. The tracing routine
+            can set up the argument to the untracing routine. This example:
+          </p>
+          <pre><code>func trace(s string) string {
+    fmt.Println("entering:", s)
+    return s
+}
+
+func un(s string) {
+    fmt.Println("leaving:", s)
+}
+
+func a() {
+    defer un(trace("a"))
+    fmt.Println("in a")
+}
+
+func b() {
+    defer un(trace("b"))
+    fmt.Println("in b")
+    a()
+}
+
+func main() {
+    b()
+}</code></pre>
+          <p>prints</p>
+          <pre><code>entering: b
+in b
+entering: a
+in a
+leaving: a
+leaving: b</code></pre>
+          <p>
+            Defer in Go diverges from block-level resource management in other
+            languages, offering unique and powerful applications rooted in its
+            function-based nature.
+          </p>
+        </section>
+        <section
+          id="Reference"
+          class="main-section"
+          role="region"
+          aria-labelledby="reference-header"
+        >
+          <header id="reference-header">Reference</header>
+          <p>
+            <strong>ALL</strong> the documentation in this page is taken from
+            <a href="https://go.dev/doc/effective_go" target="_blank">go.dev</a>
+          </p>
+        </section>
+      </article>
+    </main>
+  </body>
+</html>

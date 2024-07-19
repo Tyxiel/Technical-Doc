@@ -1,0 +1,165 @@
+* {
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #f0f0f0;
+  font-size: 16px;
+}
+
+#navbar {
+  position: fixed;
+  left: 0;
+  height: 100vh;
+  width: 150px;
+  background-color: #00769c;
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+#navbar header {
+  color: white;
+  text-align: center;
+  margin-top: 5px;
+  font-size: 1.8em;
+}
+
+#navbar ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+#navbar li {
+  margin: 5px 7px;
+  border-radius: 1rem;
+  text-align: center;
+}
+
+#navbar a {
+  display: block;
+  text-decoration: none;
+  color: #f9f9f9;
+  padding: 14px 20px;
+  font-size: 17px;
+  transition: background-color 0.3s ease;
+  border-radius: 1rem;
+}
+
+#navbar a:hover,
+#navbar a.active {
+  background-color: #000000;
+}
+
+.main-section {
+  margin-left: 165px;
+  padding: 0 20px;
+  text-align: left;
+}
+
+.main-section header#introduction-header {
+  padding-top: 30px;
+}
+
+.main-section header {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.main-section p {
+  line-height: 1.5;
+  margin: 0 0 20px 15px;
+}
+
+.main-section h3 {
+  margin: 15px;
+}
+
+.main-section .monospace {
+  font-family: monospace;
+}
+
+.main-section pre {
+  background-color: #f5f5f5;
+  padding: 10px 0 10px 30px;
+  margin: 0 0 20px 15px;
+  border-radius: 5px;
+  font-family: monospace !important;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  line-height: 2;
+}
+
+.main-section code {
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.main-section ul {
+  margin: 0 0 15px 45px;
+}
+
+.main-section li {
+  padding: 0 0 5px 0;
+}
+
+@media screen and (max-width: 1000px) {
+  #navbar a {
+    padding-left: 12.5px;
+    font-size: medium;
+  }
+
+  #navbar {
+    width: 135px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  #navbar {
+    width: 100%;
+    height: 65px;
+    position: relative;
+    overflow-y: hidden;
+    overflow-x: auto;
+    border-radius: 0;
+  }
+
+  #navbar header {
+    margin-left: calc(60vw);
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    color: white;
+    text-align: center;
+  }
+
+  #navbar ul {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  #navbar a {
+    padding: 10px 15px;
+  }
+
+  .main-section {
+    margin-left: 0;
+    padding: 0 20px 0 20px;
+  }
+}
+
+@media screen and (max-width: 550px) {
+  #navbar header {
+    margin-left: 100vw;
+  }
+}
+
+@media screen and (max-width: 470px) {
+  #navbar header {
+    margin-left: 140vw;
+  }
+}
