@@ -32,3 +32,7 @@ Ou acesse a demonstração online: [Technical Doc](tyxiel.github.io/Technical-Do
 
 Este projeto satisfaz os requisitos do projeto "Build a Technical Documentation Page" da certificação de Responsive Web Design do freeCodeCamp.
 [Responsive Web Design](https://www.freecodecamp.org/certification/Tyxiel/responsive-web-design)
+
+## Licença
+
+Este projeto é licenciado sob a **GNU Affero General Public License v3.0**.
